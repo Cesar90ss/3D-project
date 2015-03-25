@@ -15,7 +15,7 @@ public:
 	void draw();
 
 private:
-	void DrawCylinder(float height , float xbase , float ybase,float zbase,float radius);
+	void DrawCylinder(float height , float xbase , float ybase,float zbase,float radius1 , float radius2);
 
     //void drawElements();
     //void drawArrays();
