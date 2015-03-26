@@ -15,7 +15,12 @@ public:
 	void draw();
 
 private:
-	void DrawCylinder(float height , float xbase , float ybase,float zbase,float radius1 , float radius2);
+	void CirclePoints();
+	void drawHull(float z1, float r1, float z2, float r2);
+	  void drawFan1(float z, float r) ;
+	  void drawFan2(float z, float r) ;
+	  void drawCylinder(float z1, float r1, float z2, float r2) ;
+	    void drawWing(float angle, bool left);
 
     //void drawElements();
     //void drawArrays();

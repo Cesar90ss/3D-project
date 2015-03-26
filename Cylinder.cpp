@@ -3,10 +3,8 @@ using namespace std;
 #include "Cylinder.h"
 #include "math.h"
 
-float saved_valuesx1 [361];
-float saved_valuesy1 [361];
-float saved_valuesx2 [361];
-float saved_valuesy2 [361];
+float cpx [361];
+float cpy [361];
 
 
 
@@ -32,53 +30,69 @@ void Cylinder::init(Viewer &)
 
 void Cylinder::draw()
 {
+			CirclePoints();
 
+			 glPushMatrix();
+        {
+           // glTranslatef(0, sin_t * (float)(-1/ (2 + speed)), 1);
 
-	     glPushMatrix();
-         {  
+            // Torso & tail
+            glPushMatrix();
+            {
+                // Torso:
+                {  
                     //z1,r1,z2,r2
                     // cone before the neck
-         		  DrawCylinder(10,0,0,0,0.5,4);
-                  //  drawHull(0.5f, 0.5f, -0.5f, 1f);
+                    drawHull(0.5f, 0.5f, -0.5f, 1.0f);
                     glTranslatef(0, 0, -0.5f);
 
                     // cone before the tail
-                  // //  drawHull(0, 1, -2, 0.5f);
-                    //   DrawCylinder(1,0,0,0,1,0.5);
-                    // glTranslatef(0, 0, -2);
+                    drawHull(0, 1, -2, 0.5f);
+                    glTranslatef(0, 0, -2);
                 }
 
-                 glPopMatrix();
+                // Tail:
+                {
+                    // tail element 1
+                    glRotatef(-10, 0, 1, 0);
+                    drawHull(0, 0.5f, -1, 0.3f);
+                    glTranslatef(0, 0, -1);
 
-    // glPushMatrix();
-    // {
-    //      glTranslatef(0,0,10);
-    //      glRotatef(90, 0, 0, 1);
-    //      DrawCylinder(10,0,0,0,2);
+                    // tail element 2
+                    glRotatef(15, 1, 0, 0);
+                    drawHull(0.07f, 0.3f, -0.93f, 0.2f);
+                    glTranslatef(0, 0, -0.86f);
+
+                    // tail element 3
+                    glRotatef(35, 1, 0, 0);
+                    drawHull(0.1f, 0.2f, -0.7f, 0.1f);
+                    drawFan2(-0.7f, 0.1f);
+                }
+            }
+            glPopMatrix();
+
+            // Head:
+            glPushMatrix();
+            {
+                // neck
+                glTranslatef(0, 0, 0.7f);
+                drawHull(0.2f, 0.4f, -0.2f, 0.5f);
+
+                // head
+                glRotatef(20, 1, 0, 0);
+                drawCylinder(1, 0.2f, 0, 0.55f);
+            }
+            glPopMatrix();
+
+            // Wings:
+            // float angle = sin_t * 30 + 7;
+
+             drawWing(20, true);
+             drawWing(10, false);
+        }
+        glPopMatrix();
 
 
-    // } 
-    
-
-
-    //   glPushMatrix();
-    // {
-    //      glTranslatef(0,0,0);
-    //      glRotatef(0, 0, 0, 0);
-    //      DrawCylinder(6,0,0,0,0.5);
-
-
-    // } 
-    //   glPushMatrix();
-    // {
-    //      glTranslatef(0.3,0,5.2);
-    //      glRotatef(20, 0, 1, 0);
-    //      DrawCylinder(3.2,0,0,0,1.8);
-    // }  
-    // glPopMatrix();
-
-  
-    
 	
 
 }
@@ -87,62 +101,113 @@ void Cylinder::draw()
 //==================== 1. Immediate method ===================================
 // immediate definition of individual vertex properties
 // you specify the height   ,x , y , z coorinates and the radius of the bottom circle and up circle
-void Cylinder::DrawCylinder(float height , float xbase , float ybase,float zbase,float radius1,float radius2)
+void Cylinder::CirclePoints()
 {
 
-            
 
-             //Bottom circle
-             glBegin(GL_TRIANGLE_FAN);
-             glNormal3f(0.0, 0.0, -1);
-             glVertex3f ( xbase, ybase, zbase);
+            
              int i ;
                 for ( i =0 ; i<= 360 ; i++)
             {
             
             float theta = 2.0f * 3.1415926f * float(i) / float(360);//get the current angle
-            float tempx = radius1 * cosf(theta);//calculate the x component
-            float tempy = radius1 * sinf(theta);//calculate the y component
-            saved_valuesx1[i]=tempx+xbase;
-            saved_valuesy1[i]=tempy+ybase;
-            glVertex3f(tempx+xbase, tempy +ybase,zbase);       
-            }
-            glVertex3f(saved_valuesx1[0],saved_valuesy1[0], zbase);  
-            glEnd();
-            //Top Circle
-            glBegin(GL_TRIANGLE_FAN);
-            glNormal3f(0.0, 0.0, 1);
-            glVertex3f ( xbase, ybase, zbase+height);
-                for ( i =0 ; i<= 360 ; i++)
-            {
-            float theta = 2.0f * 3.1415926f * float(i) / float(360);//get the current angle
-            float tempx = radius2 * cosf(theta);//calculate the x component
-            float tempy = radius2 * sinf(theta);//calculate the y component
-            saved_valuesx2[i]=tempx+xbase;
-            saved_valuesy2[i]=tempy+ybase;
-            glVertex3f(tempx+xbase, tempy +ybase,zbase+height);//output vertex        
-            }
-            glVertex3f(saved_valuesx2[0],saved_valuesy2[0], zbase+height);
-            glEnd();
-                    
-            //Draw the rectangeles
-             glBegin(GL_QUADS);                      // Draw A Quad
-             for (i=0;i<356;i++)
-             {
-            glNormal3f(saved_valuesx1[i],saved_valuesy1[i], zbase);          
-            glVertex3f(saved_valuesx1[i],saved_valuesy1[i], zbase);  
-                    // Top Left
-            glNormal3f(saved_valuesx1[i+5],saved_valuesy1[i+5], zbase);
-            glVertex3f(saved_valuesx1[i+5],saved_valuesy1[i+5], zbase);  
-                   // Top Right
-            glNormal3f(saved_valuesx2[i+5],saved_valuesy2[i+5], zbase+height);
-            glVertex3f(saved_valuesx2[i+5],saved_valuesy2[i+5], zbase+height);
-
-            glNormal3f(saved_valuesx2[i],saved_valuesy2[i], zbase+height);    
-            glVertex3f(saved_valuesx2[i],saved_valuesy2[i], zbase+height);    
-            }
-            glEnd(); 
-    
+            float tempx =  cosf(theta);//calculate the x component
+            float tempy =  sinf(theta);//calculate the y component
+            cpx[i]=tempx;
+            cpy[i]=tempy;
+    	    }
+ 
 }
 
+void Cylinder::drawHull(float z1, float r1, float z2, float r2) {
+       
+        glBegin(GL_QUAD_STRIP);
+        {
+        	int i;
+            for ( i = 0 ; i <= 361; ++i) {
+                glNormal3f(cpx[i], cpy[i], 0);
+                glVertex3f(cpx[i] * r1, cpy[i] * r1, z1);
+                glVertex3f(cpx[i] * r2, cpy[i] * r2, z2);
+            }
+        }
+        glEnd();
+
+    }
+
+
+     void Cylinder::drawFan1(float z, float r) {
+    
+        glBegin(GL_TRIANGLE_FAN);
+        {
+            glNormal3f(0, 0, z);
+            glVertex3f(0, 0, z);
+            int i;
+            for ( i = 0;i <= 361; ++i) {
+                glVertex3f(cpx[i] * r, cpy[i] * r, z);
+            }
+        }
+        glEnd();
+    }
+
+     void Cylinder::drawFan2(float z, float r) {
+   
+        glBegin(GL_TRIANGLE_FAN);
+        {
+            glNormal3f(0, 0, z);
+            glVertex3f(0, 0, z);
+            int i;
+            for ( i = 361; i >= 0; --i) {
+                glVertex3f(cpx[i] * r, cpy[i] * r, z);
+            }
+        }
+        glEnd();
+    }
+
+
+    void Cylinder::drawCylinder(float z1, float r1, float z2, float r2) 
+    {
+        drawHull(z1, r1, z2, r2);
+        drawFan1(z1, r1);
+        drawFan2(z2, r2);
+    }
+
+
+    void Cylinder::drawWing(float angle, bool left) {
+        float v = left ? 1  : -1;
+        glPushMatrix();
+        {
+            glRotatef(angle * v, 0, 0, 1);
+            glScalef(v, 1, 1);
+
+            // top of the wing
+            glBegin(GL_TRIANGLE_FAN);
+            {
+                glNormal3f(0, 1, 0);
+                glVertex3f(2, 0.5f, 1);
+
+                glVertex3f(0, 0, 0);
+                glVertex3f(0, 0, -1);
+                glVertex3f(1.5f, 0.2f, -1);
+                glVertex3f(3, 1, -2);
+                glVertex3f(6, 0.7f, -1);
+            }
+            glEnd();
+
+            // bottom of the wing
+            glBegin(GL_TRIANGLE_FAN);
+            {
+                glNormal3f(0, 1, 0);
+                glVertex3f(2, 0.5f, 1);
+
+                glVertex3f(6, 0.7f, -1);
+                glVertex3f(3, 1, -2);
+                glVertex3f(1.5f, 0.2f, -1);
+                glVertex3f(0, 0, -1);
+                glVertex3f(0, 0, 0);
+            }
+            glEnd();
+        }
+        glPopMatrix();
+
+    }
 
