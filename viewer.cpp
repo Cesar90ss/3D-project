@@ -1,10 +1,6 @@
 #include <QKeyEvent>
-
-#ifndef __APPLE__
 #include <GL/glut.h>
-#else
-#include <GLUT/glut.h>
-#endif
+
 
 #include "viewer.h"
 #include "renderable.h"
@@ -28,16 +24,16 @@ void Viewer::addRenderable(Renderable *r)
 
 void Viewer::init()
 {
-        // glut initialisation (mandatory) 
-        int dum = 0;
+    // glut initialisation (mandatory)
+    int dum = 0;
   	glutInit(&dum, NULL);
 
 	//=== VIEWING PARAMETERS
-	restoreStateFromFile();   // Restore previous viewer state.
+    //restoreStateFromFile();   // Restore previous viewer state.
 
-	toogleWireframe = false;  // filled faces
-	toogleLight = true;       // light on
-	help();                   // display help
+    toogleWireframe = true;  // filled faces
+    toogleLight = true;       // light on
+    //help();                   // display help
 
 	if (toogleLight == true)
 		glEnable(GL_LIGHTING);

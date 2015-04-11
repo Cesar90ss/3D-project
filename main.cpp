@@ -1,8 +1,7 @@
 
 #include <qapplication.h>
 #include "viewer.h"
-#include "cube.h"
-#include "Cylinder.h"
+#include "dragon.h"
 
 int main(int argc, char** argv)
 {
@@ -13,7 +12,7 @@ int main(int argc, char** argv)
 	Viewer viewer;
 
 	// build your scene here
-        viewer.addRenderable(new Cylinder());
+        viewer.addRenderable(new Dragon());
 
 	viewer.setWindowTitle("viewer");
 	// Make the viewer window visible on screen.
